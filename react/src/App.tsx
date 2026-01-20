@@ -5,6 +5,12 @@ import './App.css'
 
 function App() {
   const [count, setCount] = useState(0)
+  console.log("import.meta.env =", import.meta.env);
+
+  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+  const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+  console.log("URL:", supabaseUrl);
+  console.log("KEY:", supabaseKey);
 
   return (
     <>
