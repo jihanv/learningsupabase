@@ -1,26 +1,35 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import supabase from "./supabase-client";
+
+type Metric = { name: string; sum: number };
 
 function Dashboard() {
 
 
+    const [metrics, setMetrics] = useState<Metric[]>([]);
+
     async function fetchMetrics() {
-        const { data, error } = await supabase
-            .from("sales_deals")
-            .select("name, value")
-            .order("value", { ascending: false })
-            .limit(1)
-            .maybeSingle(); // returns object or null
 
-        if (error) {
-            console.error(error);
-            return;
-        } else {
+
+        try {
+            const { data, error } = await supabase
+                .from('sales_deals')
+                .select(
+                    `name,
+                value.sum()
+                `,
+                )
+            if (error) {
+                throw error
+            }
             console.log(data)
+            setMetrics(data ?? [])
+
+        } catch (error) {
+            console.error("Error fetching metrics: ", error)
         }
-
-
     }
+
     useEffect(() => {
         fetchMetrics()
     }, [])
