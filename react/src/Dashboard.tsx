@@ -30,6 +30,8 @@ function Dashboard() {
         } catch (error) {
             console.error("Error fetching metrics: ", error)
         }
+
+
     }
 
     const chartData = [
@@ -42,6 +44,26 @@ function Dashboard() {
     ]
     useEffect(() => {
         fetchMetrics()
+
+        //Realtime subscription
+        const channel = supabase
+            .channel('deal-changes')
+            .on(
+                'postgres_changes',
+                {
+                    event: '*',
+                    schema: 'public',
+                    table: 'sales_deals'
+                },
+                (payload) => {
+                    fetchMetrics();
+                })
+            .subscribe();
+
+        // Clean up subscription
+        return () => {
+            supabase.removeChannel(channel);
+        };
     }, [])
     function y_max() {
         if (metrics.length > 0) {
