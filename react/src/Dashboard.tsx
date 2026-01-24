@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import supabase from "./supabase-client";
 import { Chart } from "react-charts";
 
-type Metric = { name: string; sum: number };
+export type Metric = { name: string; sum: number };
 type ChartDataPoint = { primary: string; secondary: number };
 
 function Dashboard() {
@@ -55,7 +55,7 @@ function Dashboard() {
                     schema: 'public',
                     table: 'sales_deals'
                 },
-                (payload) => {
+                () => {
                     fetchMetrics();
                 })
             .subscribe();
