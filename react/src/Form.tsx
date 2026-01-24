@@ -1,4 +1,6 @@
+import { useActionState } from "react";
 import type { Metric } from "./Dashboard";
+import { submitData } from "../formactions/submit-data"
 
 type FormProps = {
     metrics: Metric[]
@@ -6,6 +8,7 @@ type FormProps = {
 
 function Form({ metrics }: FormProps) {
 
+    const [error, submitAction, isPending] = useActionState(submitData, undefined)
     const generateOptions = () => {
         return metrics.map((metric) => (
             <option key={metric.name} value={metric.name}>
@@ -17,6 +20,7 @@ function Form({ metrics }: FormProps) {
     return (
         <div className="add-form-container">
             <form
+                action={submitAction}
                 aria-label="Add new sales deal"
                 aria-describedby="form-description"
             >
@@ -32,8 +36,8 @@ function Form({ metrics }: FormProps) {
                         name="name"
                         defaultValue={metrics?.[0]?.name || ''}
                         aria-required="true"
-                    // aria-invalid=
-                    // disabled=
+                        aria-invalid={error ? 'true' : 'false'}
+                        disabled={isPending}
                     >
                         {generateOptions()}
                     </select>
@@ -50,9 +54,9 @@ function Form({ metrics }: FormProps) {
                         min="0"
                         step="10"
                         aria-required="true"
-                        // aria-invalid=
+                        aria-invalid={error ? 'true' : 'false'}
+                        disabled={isPending}
                         aria-label="Deal amount in dollars"
-                    // disabled=
                     />
                 </label>
 
