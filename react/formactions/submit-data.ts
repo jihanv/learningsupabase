@@ -17,8 +17,8 @@ export async function submitData(
     value: newDeal.value,
   });
   if (error) {
-    console.log(error);
-    return { message: `There is an error ${error}` };
+    console.log(`There is an error: ${error.message}`);
+    return new Error("Failed to add deal");
   }
   //Return error state
 
