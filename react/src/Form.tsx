@@ -2,6 +2,7 @@ import { useActionState } from "react";
 import type { Metric } from "./Dashboard";
 import { submitData } from "../formactions/submit-data"
 
+
 type FormProps = {
     metrics: Metric[]
 }
@@ -62,15 +63,19 @@ function Form({ metrics }: FormProps) {
 
                 <button
                     type="submit"
-                // disabled=
-                // aria-busy=
+                    disabled={isPending}
+                    aria-busy={isPending}
                 >
-                    Add Deal
-                    {/*'Adding deal' when pending*/}
+                    {isPending ? 'Adding...' : "Add Deal"}
                 </button>
             </form>
 
-            {/* Error message */}
+            {error && (
+                <div role='alert' className="error-message">
+                    {/* {error.message} */}
+                    ERROR
+                </div>
+            )}
         </div>
     );
 };
