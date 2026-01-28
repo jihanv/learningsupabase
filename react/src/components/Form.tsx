@@ -1,6 +1,6 @@
 import { useActionState } from "react";
-import type { Metric } from "./Dashboard";
-import { submitData } from "../formactions/submit-data"
+import type { Metric } from "../routes/Dashboard";
+import { submitData } from "../../formactions/submit-data"
 
 
 type FormProps = {

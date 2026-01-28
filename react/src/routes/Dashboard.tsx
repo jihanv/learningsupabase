@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import supabase from "./supabase-client";
+import supabase from "../supabase-client";
 import { Chart } from "react-charts";
-import Form from "./Form";
+import Form from "../components/Form";
 
 export type Metric = { name: string; sum: number };
 type ChartDataPoint = { primary: string; secondary: number };
