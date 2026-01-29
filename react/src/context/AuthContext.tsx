@@ -1,21 +1,44 @@
-import { createContext, useState, useContext } from "react";
+import { createContext, useState, useContext, useEffect } from "react";
+import supabase from '../supabase-client';
+import type { Session } from "@supabase/supabase-js";
 
 
 type ChildrenProps = {
     children: React.ReactNode
 }
 interface AuthContextType {
-    session: string | undefined;
-    setSession?: React.Dispatch<React.SetStateAction<string>>;
+    session: Session | null;
+    setSession: React.Dispatch<React.SetStateAction<Session | null>>;
 }
 
-const AuthContext = createContext<AuthContextType>({
-    session: undefined,
-    setSession: undefined
-});
-export const AuthContextProvider = ({ children }: ChildrenProps) => {
-    const [session, setSession] = useState("Testing")
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+export const AuthContextProvider = ({ children }: ChildrenProps) => {
+    const [session, setSession] = useState<Session | null>(null)
+
+
+    // Check on 1st render for session (getSession())
+    useEffect(() => {
+        async function getInitialSession() {
+
+            try {
+                const { data, error } = await supabase.auth.getSession()
+
+                if (error) {
+                    throw error
+                }
+                console.log(data.session)
+                setSession(data.session)
+            } catch (error) {
+                console.error("Error fetching metrics: ", error)
+            }
+        }
+
+        getInitialSession()
+    }, [])
+
+
+    // Listen for changes in auth state
     return (
         <AuthContext.Provider value={{ session, setSession }}>
             {children}
@@ -24,5 +47,9 @@ export const AuthContextProvider = ({ children }: ChildrenProps) => {
 }
 // eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
-    return useContext(AuthContext)
+    const ctx = useContext(AuthContext);
+    if (!ctx) {
+        throw new Error("useAuth must be used inside <AuthContextProvider>");
+    }
+    return ctx;
 }
