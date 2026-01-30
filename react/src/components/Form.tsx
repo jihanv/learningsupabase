@@ -72,7 +72,7 @@ function Form({ metrics }: FormProps) {
 
             {error && (
                 <div role='alert' className="error-message">
-                    {/* {error.message} */}
+                    {error.message}
                     ERROR
                 </div>
             )}

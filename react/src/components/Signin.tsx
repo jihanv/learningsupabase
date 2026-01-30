@@ -1,12 +1,17 @@
+import { useActionState } from "react";
+import { signInAuth } from "../../formactions/signinAuth"
+
+
 const Signin = () => {
 
+    const [error, submitAction, isPending] = useActionState(signInAuth, null)
 
     return (
         <>
             <h1 className="landing-header">Paper Like A Boss</h1>
             <div className="sign-form-container">
                 <form
-                    //action=
+                    action={submitAction}
                     aria-label="Sign in form"
                     aria-describedby="form-description"
                 >
@@ -32,9 +37,9 @@ const Signin = () => {
                         placeholder=""
                         required
                         aria-required="true"
-                    //aria-invalid=
-                    //aria-describedby=
-                    //disabled=
+                        //aria-invalid=
+                        //aria-describedby=
+                        disabled={isPending}
                     />
 
                     <label htmlFor="password">Password</label>
@@ -61,7 +66,12 @@ const Signin = () => {
                         {/*'Signing in...' when pending*/}
                     </button>
 
-                    {/* Error message */}
+                    {error && (
+                        <div role='alert' className="error-message">
+                            {/* {error.message} */}
+                            ERROR
+                        </div>
+                    )}
                 </form>
             </div>
         </>
